@@ -8,7 +8,7 @@ This is not a _real_ project. I use this application to illustrate some training
 
 ## Versions
 
-This project has been tested with NodeJS v8.4.0 and NPM v5.3.0.
+This project has been tested with NodeJS v8.4.0 and NPM v5.3.0 and deployed with nginx 1.17.5.
 
 ## Structure
 
