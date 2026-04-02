@@ -10,42 +10,53 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
 
     env:
-      AWS_REGION: eu-west-1
+      AWS_REGION: eu-west-3
       FRONT_IMAGE_NAME: clickcat-frontend
       BACK_IMAGE_NAME: clickcat-backend
 
     steps:
       # 1. Checkout code
-      - name: ???
-        uses: ???
+      - name: Checkout repo
+        uses: actions/checkout@v5
 
       # 2. Configure AWS credentials via secrets
-      - name: ???
-        uses: ???
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.0.0
         with:
-          aws-access-key-id: ???
-          aws-secret-access-key: ???
-          aws-region: ???
+          role-to-assume: arn:aws:iam::171171308689:role/GitHubActionsRole
+          role-session-name: MySessionName
+          aws-region: eu-west-3
 
       # 3. Log in to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
       # 4. Run tests
-      - name: ???
+      - name: Run backend tests
         run: |
-          ???
-          ???
-          ???
+          cd backend
+          npm install
+          npm test
 
       # 5. Define image URIs
       - name: Set image names
         run: |
-          echo "FRONT_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.FRONT_IMAGE_NAME }}:latest" >> $GITHUB_ENV
-          echo "BACK_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.BACK_IMAGE_NAME }}:latest" >> $GITHUB_ENV
+          echo "FRONT_IMAGE=171171308689.dkr.ecr.eu-west-3.amazonaws.com/hymaia/clic-cat-front:anastasia-${{ github.run_number }}" >> $GITHUB_ENV
+          echo "BACK_IMAGE=171171308689.dkr.ecr.eu-west-3.amazonaws.com/hymaia/clic-cat-back:anastasia-${{ github.run_number }}" >> $GITHUB_ENV
+
 
       # 6. Build and push frontend image
-      ???
+      - name: Build, tag, and push docker image to Amazon ECR
+        run: |
+          docker build -t ${{ env.FRONT_IMAGE }} ./frontend
+          docker push ${{ env.FRONT_IMAGE }}
 
       # 7. Build and push backend image
-      ???
+      - name: Build, tag, and push docker image to Amazon ECR
+        run: |
+          docker build -t ${{ env.BACK_IMAGE }} ./backend
+          docker push ${{ env.BACK_IMAGE }}
