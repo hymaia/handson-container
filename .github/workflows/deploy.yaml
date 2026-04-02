@@ -15,37 +15,38 @@ jobs:
       AWS_REGION: eu-west-1
       FRONT_IMAGE_NAME: clickcat-frontend
       BACK_IMAGE_NAME: clickcat-backend
+      ROLE_TO_ASSUME: arn:aws:iam::171171308689:role/GitHubActionsRole
 
     steps:
       # 1. Checkout code
-      - name: ???
-        uses: ???
+      - name: checkout
+        uses: actions/checkout@v4
 
       # 2. Configure AWS credentials via secrets
-      - name: ???
-        uses: ???
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ???
-          aws-secret-access-key: ???
-          aws-region: ???
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
 
       # 3. Log in to Amazon ECR
-
-      # 4. Run tests
-      - name: ???
-        run: |
-          ???
-          ???
-          ???
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
 
       # 5. Define image URIs
       - name: Set image names
         run: |
-          echo "FRONT_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.FRONT_IMAGE_NAME }}:latest" >> $GITHUB_ENV
-          echo "BACK_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.BACK_IMAGE_NAME }}:latest" >> $GITHUB_ENV
+          echo "FRONT_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.FRONT_IMAGE_NAME }}:said" >> $GITHUB_ENV
+          echo "BACK_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.BACK_IMAGE_NAME }}:said" >> $GITHUB_ENV
 
       # 6. Build and push frontend image
-      ???
+      - name: build-image-frontend
+        run: |
+          docker build -t $FRONT_IMAGE -f step3.Dockerfile .
+          docker push $FRONT_IMAGE
 
       # 7. Build and push backend image
-      ???
+      - name: build-image-backend
+        run: |
+          docker build -t $BACK_IMAGE -f step3.Dockerfile .
+          docker push $BACK_IMAGE
