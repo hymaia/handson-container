@@ -49,5 +49,5 @@ jobs:
       # 7. Build and push backend image
       - name: build-image-backend
         run: |
-          docker build -t $BACK_IMAGE -f step3.Dockerfile .
+          docker build -t $BACK_IMAGE -f backend/Dockerfile .
           docker push $BACK_IMAGE
