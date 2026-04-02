@@ -37,9 +37,9 @@ jobs:
       # 5. Define image URIs
       - name: Set image names
         run: |
-          echo "FRONT_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.FRONT_IMAGE_NAME }}:said" >> $GITHUB_ENV
-          echo "BACK_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.BACK_IMAGE_NAME }}:said" >> $GITHUB_ENV
-
+          echo "FRONT_IMAGE=171171308689.dkr.ecr.eu-west-3.amazonaws.com/hymaia/clic-cat-front:said" >> $GITHUB_ENV
+          echo "BACK_IMAGE=171171308689.dkr.ecr.eu-west-3.amazonaws.com/hymaia/clic-cat-back:said" >> $GITHUB_ENV
+          
       # 6. Build and push frontend image
       - name: build-image-frontend
         run: |
